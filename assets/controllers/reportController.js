@@ -490,7 +490,116 @@ app.controller('reportCtrl',['$scope', '$state', '$timeout', '$http', '$rootScop
             $scope.merit_cal();
         }
 
+           /*******************Upload Excel File For Questions***************/
+        $scope.questionpaper='';
+        $scope.uplaodQuestions = function(ev) {
+            $scope.uplexcelQuse = '';
+            $mdDialog.show({
+                controller: questCtrl,
+                templateUrl: 'welcome/upload_exl_questions',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose:true,
+                scope: $scope,        // use parent scope in template
+                preserveScope: true,  // do not forget this if use parent scope
+                locals : { quest : '' },
+                fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            })
+                .then(function(answer) {
+                    $scope.status = 'You said the information was "' + answer + '".';
+                }, function() {
+                    $scope.status = 'You cancelled the dialog.';
+                });
+        };
 
+
+       $scope.Upload_exl_quests = function(){
+
+            //var fileUpload =$scope.questionpaper;
+           var fileUpload = document.getElementById("fileUpload");
+            //Validate whether File is valid Excel file.
+          var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.xls|.xlsx)$/;
+           if (regex.test(fileUpload.value.toLowerCase())) {
+               if (typeof (FileReader) != "undefined") {
+                   var reader = new FileReader();
+
+                   //For Browsers other than IE.
+                   if (reader.readAsBinaryString) {
+                       reader.onload = function (e) {
+                           $scope.ProcessExcel(e.target.result);
+                       };
+                       reader.readAsBinaryString(fileUpload.files[0]);
+                   } else {
+                       //For IE Browser.
+                       reader.onload = function (e) {
+                           var data = "";
+                           var bytes = new Uint8Array(e.target.result);
+                           for (var i = 0; i < bytes.byteLength; i++) {
+                               data += String.fromCharCode(bytes[i]);
+                           }
+                           $scope.ProcessExcel(data);
+                       };
+                       reader.readAsArrayBuffer(fileUpload.files[0]);
+                   }
+               } else {
+                   alert("This browser does not support HTML5.");
+               }
+           } else {
+               alert("Please upload a valid Excel file.");
+           }
+
+
+           //$scope.uplexcelQuse =[];
+           $scope.ProcessExcel = function(data) {
+               //Read the Excel File data.
+
+               var workbook = XLSX.read(data, {
+                   type: 'binary'
+               });
+
+               //Fetch the name of First Sheet.
+               var firstSheet = workbook.SheetNames[0];
+
+               //Read all rows from First Sheet into an JSON array.
+               $scope.uplexcelQuse = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[firstSheet]);
+
+               //var resp = data.split('\n');
+               console.log("data11 : " + JSON.stringify($scope.uplexcelQuse));
+
+
+           }
+
+       }
+
+
+
+        $scope.save_exl_quest = function() {
+
+            //var send = $scope.uplexcelQuse;
+            //send.action = "upload_questions";
+            if($scope.uplexcelQuse =='')
+            {
+                baseFactory.toastCtrl('Failed','Please Upload Excel File!');
+            }
+            var send={stg:$scope.uplexcelQuse,action:"upload_questions"};
+            $log.log("My function called "+JSON.stringify(send));
+            baseFactory.setupsCtrl(send)
+                .then(function (payload) {
+                       // $log.log(payload);
+                        if (payload.response == $rootScope.successdata) {
+                                baseFactory.toastCtrl("success","Questions Uploaded Successfully");
+                                $mdDialog.hide();
+                         }
+                        else {
+                            baseFactory.toastCtrl("error","Something Went Wrong");
+                        }
+
+                    },
+                    function (errorPayload) {
+                        $log.error('failure loading', errorPayload);
+                    });
+
+        }
 
 
 	/************************  Charts *****************************/

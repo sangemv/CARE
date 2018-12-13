@@ -24,6 +24,7 @@ class Registry extends CI_Controller
         $this->load->model('users');
         $this->load->model('result_hd');
         $this->load->model('results');
+        $this->load->model('time_calct');
 
     }
 
@@ -43,6 +44,8 @@ class Registry extends CI_Controller
                 $data = $this->_get_exam_questions($jodata);
              else if($action=="save_exam")
                 $data = $this->_save_exam($jodata);
+             else if($action=="get_current_qsttime")
+                $data = $this->_get_current_qsttime($jodata);
 
             echo json_encode($data);
         }
@@ -106,6 +109,30 @@ class Registry extends CI_Controller
 
         $data["response"] = SUCCESSDATA;
         $data["status"] = "Success";
+
+        return $data;
+    }
+
+
+    public function _get_current_qsttime($input)
+    {
+        $seconds = $input->seconds;
+        $questno = $input->questno;
+        $qgroup = $input->qgroup;
+        $login_user = $this->session->exam_uid;
+
+      //  $qry = "INSERT INTO `exam_time_calct`(`USER_ID`, `Q_GROUP`, `Q_ID`, `Q_TYPE`, `Q_TIME`) VALUES
+        //  ('".$login_user."','".$qgroup."','".$questno."','R','".$seconds."')";
+
+        $res = $this->basemodel->insert_into_table($this->time_calct->tbl_name, array('USER_ID' => $input->user_id,
+            'Q_GROUP' => $input->qgroup,'Q_ID' => $input->questno,'Q_TYPE' => 'R','Q_TIME' => $input->seconds));
+
+
+       // $res = $this->basemodel->run_qry($qry);
+        if($res)
+        $data['response'] = SUCCESSDATA;
+        else
+        $data['response'] = FAILEDDATA;
 
         return $data;
     }

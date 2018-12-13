@@ -18,7 +18,7 @@
     <link type="text/css" rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font-awesome.css">
 	<link href="<?php echo base_url(); ?>assets/css/main.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.rawgit.com/codekraft-studio/angular-page-loader/master/dist/angular-page-loader.css">
-	
+
     <script src="<?php echo base_url(); ?>assets/js/jquery-3.2.1.min.js" type="text/javascript"></script>
     <script src="<?php echo base_url(); ?>assets/js/angular.min.js"></script> <!-- 1.5.5 --->
     <script src="<?php echo base_url(); ?>assets/js/angular-ui-router.min.js"></script> <!-- 1.0.0-rc.1 --->
@@ -49,14 +49,19 @@
     <script src="<?php echo base_url(); ?>assets/controllers/adminController.js"></script>
     <script src="<?php echo base_url(); ?>assets/controllers/loginController.js"></script>
 
-
     <script src="<?php echo base_url(); ?>assets/factory/base_factory.js"></script>
     <script src="<?php echo base_url(); ?>assets/factory/multiexcel-factory.js"></script>
     <!--<script src="<?php /*echo base_url(); */?>assets/directives/base_directives.js"></script>-->
 
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
+
+
+
 </head>
 
-<body ng-app="noe" class="style-3" ng-cloak >
+<body ng-app="noe" class="style-3" ng-cloak>
 <page-loader flag="isLoading" ></page-loader>
 <div class="row">
     <div ui-view></div>	  

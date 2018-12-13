@@ -10,6 +10,14 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider,$urlR
                 '': {templateUrl: 'welcome/index',controller: 'loginCtrl'}
             }
         })
+
+        .state('register', {
+            url: '/register',
+            views: {
+                '': {templateUrl: 'welcome/register',controller: 'loginCtrl'}
+            }
+        })
+
         .state('home', {
             url: '/exam',
             views: {

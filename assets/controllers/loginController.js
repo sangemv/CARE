@@ -1,7 +1,7 @@
 /**
  * Created by uday on 08/02/2018.
  */
-app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope', '$q','$log','$window','baseFactory','$cookies','$filter', function ($scope, $state, $timeout, $http, $rootScope, $q, $log,$window,baseFactory,$cookies,$filter)
+app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope', '$q','$log','$window','baseFactory','$cookies','$filter','$mdDialog', function ($scope, $state, $timeout, $http, $rootScope, $q, $log,$window,baseFactory,$cookies,$filter,$mdDialog)
 {
     $rootScope.isLoading = true;
     $rootScope.successdata = "success";
@@ -195,6 +195,61 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
 
         }
     }
+
+
+
+    $scope.landing_pg = function(ev) {
+        $mdDialog.show({
+            controller: DialogController,
+            templateUrl: 'welcome/get_landing',
+            scope: $scope,        // use parent scope in template
+            preserveScope: true,  // do not forget this if use parent scope
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose:true,
+            fullscreen: $scope.customFullscreen, // Only for -xs, -sm breakpoints.
+            locals : { }
+        })
+            .then(function(answer2) {
+                $scope.status = 'You said the information was "' + answer2 + '".';
+            }, function() {
+                $scope.status = 'You cancelled the dialog.';
+            });
+    };
+
+    function DialogController($scope, $mdDialog ) {
+        $log.info("i am in ip number search ctrl");
+
+        $scope.hide = function() {
+            $mdDialog.hide();
+        };
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+        $scope.answer = function(answer) {
+             $mdDialog.cancel();
+        };
+
+
+        $scope.login_redir = function(data) {
+            $log.info("data: "+data);
+            $mdDialog.hide();
+
+            if(data == 'Login'){
+               // $state.go('login');
+                $scope.submit_label = 'Login';
+            }else if(data == 'Signup'){
+                //$state.go('register');
+                $scope.submit_label = 'Signup';
+                $scope.newaction = 'Login';
+            }
+        }
+
+
+    }
+    $scope.landing_pg();
+
+
 
 
 }]);

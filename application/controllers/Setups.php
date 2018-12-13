@@ -49,8 +49,9 @@ class Setups extends CI_Controller
 			else if($action=="qgroup_data_list")
                 $data = $this->_qgroup_data_list($jodata);
 			else if($action == "operate_question")
-			    $data = $this->_operate_question($jodata);
-
+                $data = $this->_operate_question($jodata);
+            else if($action == "upload_questions")
+                $data = $this->_upload_questions($jodata);
             echo json_encode($data);
         }
     }
@@ -160,6 +161,58 @@ class Setups extends CI_Controller
         echo $res;
     }
 
+
+    public function _upload_questions($input)
+    {
+       for($j = 0; $j < sizeof($input->stg) ; $j++) {
+            $group = $input->stg[$j]->Q_GROUP;
+            //$q_id = $input->stg[$j]->Q_ID;
+            $qst_desc = $input->stg[$j]->Q_DESC;
+            $answer = $input->stg[$j]->ANS;
+            $opt_sz = $input->stg[$j]->MAX_OPT;
+
+            $opt1 = $input->stg[$j]->OPT1;
+            $opt2 = $input->stg[$j]->OPT2;
+            $opt3 = $input->stg[$j]->OPT3;
+            $opt4 = $input->stg[$j]->OPT4;
+
+           //$qry = "SELECT `Q_ID` FROM `exam_m_qst` WHERE `Q_GROUP` = '".$group."' order by `SNO` desc limit 1 ";
+
+           //$res = $this->basemodel->fetch_single_row($this->q_mst->tbl_name,$where[$this->q_mst->Q_GROUP]=$group);
+
+           $res = $this->basemodel->execute_qry($qry);
+           if (!empty($res)) {
+               $q_id = (int)$res[0]['Q_ID'] + 1;
+           }
+           else
+               $q_id = 100;
+
+
+            $qry = "INSERT INTO `exam_m_qst`( `Q_GROUP`, `Q_TYPE`, `Q_ID`, `Q_DESC`, `ANS`,`MAX_OPT`,
+     `OPT1`, `OPT2`, `OPT3`, `OPT4`, `OPT5`, `OPT6`, `OPT7`, `OPT8`, `OPT9`, `OPT10`, `OPT11`, `OPT12`, `OPT13`, `OPT14`, `OPT15`,
+      `CREATED_BY`, `CREATED_ON`, `STATUS`) VALUES ('" . $group . "', 'R', '".$q_id."', '".$qst_desc."', '".$answer."','".$opt_sz."','".$opt1."','".$opt2."','".$opt3."','".$opt4."',";
+
+           $opt_str = array();
+           //for($i = 1; $i <= 4; $i++)
+             //  array_push( $opt_str, "'".$opt[$i]."'");
+
+           for($i = 4; $i < 15; $i++)
+               //if($input->stg[$j]->OPT[$i] == '-')
+                array_push( $opt_str, "'-'");
+
+            $opt_str = implode(',',$opt_str);
+            $qry .= $opt_str. ",". $this->session->exam_uid.",'".date('Y-m-d')."', 'A' )";
+
+           $res = $this->basemodel->run_qry($qry);
+           //echo $qry;
+        }
+        if($res)
+            $data['response'] = SUCCESSDATA;
+        else
+            $data['response'] = FAILEDDATA;
+
+        return $data;
+    }
 
 	
 }

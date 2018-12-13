@@ -16,7 +16,7 @@ app.controller('regCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope',
     //timer with timeout
     $scope.stop_watch = 1800; // Total exam time 30 min
     $scope.start_exam = function() {
-
+        $scope.prevdat = new Date();
         if($cookies.get('exam_time') != '' )
         {
             $scope.stop_watch = $cookies.get('exam_time');
@@ -154,6 +154,7 @@ app.controller('regCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope',
                     if (payload.response == $rootScope.successdata) {
                         if(stat == 'Y')
                             $scope.close_exam();
+                        //$scope.current_question('25');
                     }
                     else {
                        baseFactory.toastCtrl('error',"Something Went Wrong");
@@ -173,6 +174,49 @@ app.controller('regCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope',
 
         $timeout($scope.logout,60000);
     }
+
+
+
+
+    //$scope.prevdat = 0;
+    $scope.current_question = function(index)
+    {
+        $scope.current_index = index;
+        $scope.current_quest = $scope.quest_list[index];
+
+        $scope.curdt = new Date();
+        var date2 = new Date();
+        //$log.info(date2+ " : current : "+$scope.curdt +" : time : "+$scope.prevdat);
+
+        var res = Math.round(Math.abs($scope.curdt - $scope.prevdat) / 1000);
+        var days = Math.floor(res / 86400);
+        var hours = Math.floor(res / 3600) % 24;
+        var minutes = Math.floor(res / 60) % 60;
+        var seconds = Math.round(res % 60);
+        //$log.info("dayDifference time "+res+ "  Days: "+days+"Hr: "+hours+"min: "+minutes+"sec: "+seconds);
+        $scope.prevdat = $scope.curdt;
+
+        var send = {"action":"get_current_qsttime","user_id":$scope.user_id,"seconds":res,"questno":$scope.current_index,"qgroup": $scope.qgroup};
+        baseFactory.examCtrl(send)
+            .then(function (payload) {
+                    // $log.log(payload);
+                    if (payload.response == $rootScope.successdata){
+
+                    }
+                    else {
+
+                    }
+                },
+                function (errorPayload) {
+                    baseFactory.toastCtrl('error',"Something Went Wrong");
+                    $log.error('failure loading', errorPayload);
+                });
+
+
+
+
+    }
+
 
 
 

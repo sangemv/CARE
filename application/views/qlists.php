@@ -71,6 +71,9 @@
                 <div class="card-header card-header-icon" data-background-color="orange" style="float: right" ng-click="addQuestion($event)">
                   Add New
                 </div>
+                <div class="card-header card-header-icon" data-background-color="orange" style="float: right" ng-click="uplaodQuestions($event)">
+                    Upload Excel
+                </div>
                 <div class="clearfix"></div>
                 <div class="card-content">
 

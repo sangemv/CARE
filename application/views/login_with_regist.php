@@ -83,7 +83,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="footer text-center">
                         <button type="submit" data-background-color="blue" class="btn btn-round" style="padding:13px 25px;margin:10px" ng-click="logincheck()" ng-disabled="loginForm.$invalid"  >{{submit_label}}</button>
 
-                        <!--<span style="color:blue;" ng-click="changeaction()"><u>{{newaction}}</u></span>-->
+                       <!-- <span style="color:blue;" ng-click="changeaction()"><u>{{newaction}}</u></span>-->
                     </div>
 
                 </form>
@@ -126,7 +126,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="footer text-center">
                         <button type="submit" data-background-color="blue" class="btn btn-round" style="padding:13px 25px;margin:10px" ng-click="logincheck()" ng-disabled="loginForm.$invalid"  >{{submit_label}}</button>
 
-                        <!--<span style="color:blue;" ng-click="changeaction()"><u>{{newaction}}</u></span>-->
+                        <span style="color:blue;" ng-click="changeaction()"><u>{{newaction}}</u></span>
                     </div>
 
                 </form>
@@ -136,6 +136,4 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <p class="text-center" style="color:white;margin-top:20px"> © Powered by CARE IT </p>
     </div>
 </div>
-
-
 

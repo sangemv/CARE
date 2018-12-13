@@ -73,14 +73,6 @@ app.controller('mainCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope'
                 });
     }
 
-    $scope.current_question = function(index)
-    {
-        $log.info("exam staus "+$scope.exam_stat);
-        $log.info("current location "+index);
-
-        $scope.current_index = index;
-        $scope.current_quest = $scope.quest_list[index];
-    }
 
 
 
