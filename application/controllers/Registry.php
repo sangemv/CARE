@@ -116,23 +116,21 @@ class Registry extends CI_Controller
 
     public function _get_current_qsttime($input)
     {
-        $seconds = $input->seconds;
-        $questno = $input->questno;
-        $qgroup = $input->qgroup;
-        $login_user = $this->session->exam_uid;
+        $data = array();
+        $insert = array();
+        $insert['USER_ID'] = $this->session->exam_uid;
+        $insert['Q_GROUP'] = $this->session->qgroup;
+        $insert['Q_ID'] = $this->session->questno;
+        $insert['Q_TYPE'] = 'R';
+        $insert['Q_TIME'] = $input->seconds;
+        $insert['START_TIME'] = $input->start_time;
+        $insert['END_TIME'] = $input->end_time;
 
-      //  $qry = "INSERT INTO `exam_time_calct`(`USER_ID`, `Q_GROUP`, `Q_ID`, `Q_TYPE`, `Q_TIME`) VALUES
-        //  ('".$login_user."','".$qgroup."','".$questno."','R','".$seconds."')";
-
-        $res = $this->basemodel->insert_into_table($this->time_calct->tbl_name, array('USER_ID' => $input->user_id,
-            'Q_GROUP' => $input->qgroup,'Q_ID' => $input->questno,'Q_TYPE' => 'R','Q_TIME' => $input->seconds));
-
-
-       // $res = $this->basemodel->run_qry($qry);
+        $res = $this->basemodel->insert_into_table($this->time_calct->tbl_name, $insert);
         if($res)
-        $data['response'] = SUCCESSDATA;
+            $data['response'] = SUCCESSDATA;
         else
-        $data['response'] = FAILEDDATA;
+            $data['response'] = FAILEDDATA;
 
         return $data;
     }

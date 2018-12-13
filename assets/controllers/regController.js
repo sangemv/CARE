@@ -183,7 +183,6 @@ app.controller('regCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope',
     {
         $scope.current_index = index;
         $scope.current_quest = $scope.quest_list[index];
-
         $scope.curdt = new Date();
         var date2 = new Date();
         //$log.info(date2+ " : current : "+$scope.curdt +" : time : "+$scope.prevdat);
@@ -194,9 +193,19 @@ app.controller('regCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope',
         var minutes = Math.floor(res / 60) % 60;
         var seconds = Math.round(res % 60);
         //$log.info("dayDifference time "+res+ "  Days: "+days+"Hr: "+hours+"min: "+minutes+"sec: "+seconds);
+
+        var send = {
+                    "action":"get_current_qsttime",
+                    "user_id":$scope.user_id,
+                    "seconds":res,
+                    "questno":$scope.current_index,
+                    "qgroup": $scope.qgroup,
+                    "start_time" : $scope.prevdat,
+                    "end_time" : $scope.curdt
+                };
+
         $scope.prevdat = $scope.curdt;
 
-        var send = {"action":"get_current_qsttime","user_id":$scope.user_id,"seconds":res,"questno":$scope.current_index,"qgroup": $scope.qgroup};
         baseFactory.examCtrl(send)
             .then(function (payload) {
                     // $log.log(payload);

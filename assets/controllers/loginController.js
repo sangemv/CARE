@@ -7,10 +7,10 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
     $rootScope.successdata = "success";
     $rootScope.emptydata   = "empty";
     $rootScope.faileddata  = "failed";
-    $scope.newaction       = 'Login';
-    $scope.submit_label    = 'Signup';
+    $scope.newaction       = 'Signup';
+    $scope.submit_label    = 'Login';
 
-    $log.log("i'm in login Controller");
+    $log.log("i'm in login Controller : submit - "+$scope.submit_label+" new "+$scope.newaction);
     $log.log("user_id "+$cookies.get('exam_user_id'));
 
     if ($cookies.get('exam_user_id') == undefined || $cookies.get('exam_user_id') == "" || $cookies.get('exam_user_id') == null)

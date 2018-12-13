@@ -187,7 +187,6 @@ class Setups extends CI_Controller
            else
                $q_id = 100;
 
-
             $qry = "INSERT INTO `exam_m_qst`( `Q_GROUP`, `Q_TYPE`, `Q_ID`, `Q_DESC`, `ANS`,`MAX_OPT`,
      `OPT1`, `OPT2`, `OPT3`, `OPT4`, `OPT5`, `OPT6`, `OPT7`, `OPT8`, `OPT9`, `OPT10`, `OPT11`, `OPT12`, `OPT13`, `OPT14`, `OPT15`,
       `CREATED_BY`, `CREATED_ON`, `STATUS`) VALUES ('" . $group . "', 'R', '".$q_id."', '".$qst_desc."', '".$answer."','".$opt_sz."','".$opt1."','".$opt2."','".$opt3."','".$opt4."',";

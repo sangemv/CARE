@@ -15,8 +15,8 @@ class Time_calct extends CI_Model
     public $Q_ID        = "Q_ID";
     public $Q_TYPE   	= "Q_TYPE";
     public $Q_TIME      = "Q_TIME";
-    public $START_TIME      = "START_TIME";
-    public $END_TIME      = "END_TIME";
+    public $START_TIME  = "START_TIME";
+    public $END_TIME    = "END_TIME";
     public $CREATE_TIME = "CREATE_TIME";
 }
 
