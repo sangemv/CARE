@@ -75,15 +75,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                                 <div ng-message="required" ng-if="auth.email != ''" >Invalid EmailId.</div>
                             </div>
                         </md-input-container>
-
-                        <p style="font-size:12px;text-align:center;line-height: 20px;margin:5px 0px -5px" ng-if="submit_label== 'Signup'">Registered <span style="color:#009688;margin:0px"><b> EMAIL ID</b></span> will be your <span style="color:#009688;margin:0px"><b>USER ID</b></span> </p>
-
+                        <p style="font-size:12px;text-align:center;line-height: 20px;margin:5px 0px -5px" >Registered <span style="color:#009688;margin:0px"><b> EMAIL ID</b></span> will be your <span style="color:#009688;margin:0px"><b>USER ID</b></span> </p>
                     </div>
 
                     <div class="footer text-center">
                         <button type="submit" data-background-color="blue" class="btn btn-round" style="padding:13px 25px;margin:10px" ng-click="logincheck()" ng-disabled="loginForm.$invalid"  >{{submit_label}}</button>
 
                         <!--<span style="color:blue;" ng-click="changeaction()"><u>{{newaction}}</u></span>-->
+                        <span style="color:blue;" ng-click="moduleSelection()"><u>Change Module</u></span>
                     </div>
 
                 </form>
@@ -93,7 +92,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="card-content" style="padding: 5px 20px;">
                         <md-input-container md-no-float class="input-group">
                             <span class="input-group-addon"><i class="material-icons">face</i></span>
-                            <input placeholder = "USER ID"  required name="user_id" ng-model="auth.user_id" style="height:30px" >
+                            <input placeholder = "USER ID"  required name="user_id" ng-model="auth.user_id"
+                              ng-blur="loginForm.user_id.$valid == true ? loginForm.user_id.$valid = validate_user() : true" style="height:30px" >
                             <div ng-messages="loginForm.user_id.$error">
                                 <div ng-message="required">Required.</div>
                             </div>
@@ -120,13 +120,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             </div>
                         </md-input-container>
 
-                        <p style="font-size:12px;text-align:center;line-height: 20px;margin:5px 0px -5px" >Please <span style="color:#009688;margin:0px"><b>LOGIN</b></span> with your registered <span style="color:#009688;margin:0px"><b> EMAIL ID</b></span> </p>
+                        <label ng-if="apptitle == 3"><p style="font-size:12px;text-align:center;line-height: 20px;margin:5px 0px -5px" >Please <span style="color:#009688;margin:0px"><b>LOGIN</b></span> with your registered <span style="color:#009688;margin:0px"><b> EMAIL ID</b></span> </p> </label>
+                        <label ng-if="apptitle != 3"><p style="font-size:12px;text-align:center;line-height: 20px;margin:5px 0px -5px" >Please <span style="color:#009688;margin:0px"><b>LOGIN</b></span> with your <span style="color:#009688;margin:0px"><b> ERP ID</b></span> </p> </label>
 
                     </div>
                     <div class="footer text-center">
                         <button type="submit" data-background-color="blue" class="btn btn-round" style="padding:13px 25px;margin:10px" ng-click="logincheck()" ng-disabled="loginForm.$invalid"  >{{submit_label}}</button>
 
                         <!--<span style="color:blue;" ng-click="changeaction()"><u>{{newaction}}</u></span>-->
+                        <span style="color:blue;" ng-click="moduleSelection()"><u>Change Module</u></span>
                     </div>
 
                 </form>

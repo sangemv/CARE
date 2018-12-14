@@ -27,6 +27,7 @@ class Setups extends CI_Controller
         $this->load->model('result_hd');
         $this->load->model('results');
         $this->load->model('qgroups');
+        $this->load->model('modules');
         $this->load->model('branchs');
     }
 
@@ -44,6 +45,8 @@ class Setups extends CI_Controller
             $action = $jodata->action;
             if($action=="fetch_qgroup_data")
                 $data = $this->_fetch_qgroup_data($jodata);
+            if($action=="fetch_mod_data")
+                $data = $this->_fetch_mod_data($jodata);
 			else if($action=="set_qgroup_data")
                 $data = $this->_set_qgroup_data($jodata);
 			else if($action=="qgroup_data_list")
@@ -59,10 +62,19 @@ class Setups extends CI_Controller
 	
 	public function _fetch_qgroup_data($input)
     {
-        $res = $this->basemodel->fetch_records_from($this->qgroups->tbl_name,'',array($this->qgroups->GROUP_ID,$this->qgroups->GROUP_NAME,$this->qgroups->STATUS));
+        $res = $this->basemodel->fetch_records_from($this->qgroups->tbl_name,array($this->qgroups->STATUS=>'A', $this->qgroups->MOD_ID => $input->modid ),array($this->qgroups->GROUP_ID,$this->qgroups->GROUP_NAME,$this->qgroups->STATUS));
         $res = $this->basemodel->result_validation($res);
         return $res;
     }
+
+	public function _fetch_mod_data($input)
+    {
+        $res = $this->basemodel->fetch_records_from($this->modules->tbl_name,array($this->modules->STATUS=>'A'),array($this->modules->MOD_ID,$this->modules->MOD_DESC,$this->modules->STATUS));
+        $res = $this->basemodel->result_validation($res);
+        return $res;
+    }
+
+
 	
 	public function _set_qgroup_data($input)
     {

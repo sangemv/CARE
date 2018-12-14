@@ -3,15 +3,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Created by PhpStorm.
  * User: uday
- * Date: 23/03/2018
- * Time: 14:37
+ * Date: 13/12/2018
+ * Time: 14:48
  */
-class Qgroups extends CI_Model
+class Modules extends CI_Model
 {
-    public $tbl_name    = "qgroups";
-    public $GROUP_ID   	= "GROUP_ID";
-    public $GROUP_NAME  = "GROUP_NAME";
-    public $MOD_ID      = "MOD_ID";
+    public $tbl_name    = "modules";
+    public $MOD_ID   	= "MOD_ID";
+    public $MOD_DESC    = "MOD_DESC";
     public $CREATED_BY  = "CREATED_BY";
     public $CREATED_ON  = "CREATED_ON";
     public $CREATED_AT  = "CREATED_AT";

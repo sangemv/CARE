@@ -10,9 +10,10 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
     $scope.newaction       = 'Signup';
     $scope.submit_label    = 'Login';
 
-    $log.log("i'm in login Controller : submit - "+$scope.submit_label+" new "+$scope.newaction);
+    $log.log("i'm in login Controller ");
     $log.log("user_id "+$cookies.get('exam_user_id'));
 
+    $scope.apptitle = "Examize Nurses";
     if ($cookies.get('exam_user_id') == undefined || $cookies.get('exam_user_id') == "" || $cookies.get('exam_user_id') == null)
     {
         if (!$state.is("login"))
@@ -53,7 +54,7 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
     $scope.qgroup_list = [];
     $scope.get_qgroups = function()
     {
-        var send = {"action":"fetch_qgroup_data"};
+        var send = {"action":"fetch_qgroup_data","modid":$scope.apptitle};
         baseFactory.setupsCtrl(send)
             .then(function (payload) {
                     //$log.log(payload);
@@ -68,8 +69,27 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
                     $log.error('failure loading', errorPayload);
                 });
     }
-    $scope.get_qgroups();
+    // $scope.get_qgroups();
 
+    $scope.mod_list = [];
+    $scope.get_modules = function()
+    {
+        var send = {"action":"fetch_mod_data"};
+        baseFactory.setupsCtrl(send)
+            .then(function (payload) {
+                    //$log.log(payload);
+                    if (payload.response == $rootScope.successdata) {
+                        $scope.mod_list = payload.list;
+                    }
+                    else {
+                        $scope.mod_list = [];
+                    }
+                },
+                function (errorPayload) {
+                    $log.error('failure loading', errorPayload);
+                });
+    }
+    $scope.get_modules();
 
     $scope.changeaction = function()
     {
@@ -94,7 +114,7 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
         var send = $scope.auth;
         send.action = $scope.submit_label;
         $log.log("action "+send.action);
-        $log.log(JSON.stringify(send));
+        //$log.log(JSON.stringify(send));
 
         baseFactory.UserCtrl(send)
             .then(function(payload)
@@ -136,30 +156,25 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
     $scope.validate_user = function()
     {
         if($scope.submit_label == 'Signup')
-            var send = {userid: $scope.auth.email ,action : 'validate_user'};
+            var send = {userid: $scope.auth.email ,modid : $scope.apptitle, action_on : $scope.submit_label, action : 'validate_user'};
         else if($scope.submit_label == 'Login')
-            var send = {userid: $scope.auth.user_id ,action : 'validate_user'};
+            var send = {userid: $scope.auth.user_id ,modid : $scope.apptitle,  action_on : $scope.submit_label,action : 'validate_user'};
 
         $log.log(send);
         baseFactory.UserCtrl(send)
             .then(function(payload)
                 {
                     $log.log(payload);
-                    if($scope.submit_label == 'Signup') {
-                        if(payload.response==$rootScope.successdata)
-                            return true;
-                        else{
+                    if(payload.response==$rootScope.faileddata)
+                    {
+                        if($scope.submit_label == 'Signup'){
                             $scope.auth.email = '';
-                            baseFactory.toastCtrl('error',"Email Id Already Exists");
+                            baseFactory.toastCtrl('error',payload.status);
                             return false;
                         }
-                    }
-                    else if($scope.submit_label == 'Login')
-                    {
-                        if(payload.response==$rootScope.successdata)
-                        {
+                        else if($scope.submit_label == 'Login'){
                             $scope.auth.user_id = '';
-                            baseFactory.toastCtrl('error',"Invalid UserID");
+                            baseFactory.toastCtrl('error',payload.status);
                             return false;
                         }
                         else
@@ -183,6 +198,9 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
             $cookies.put('exam_time','');
             $cookies.put('exam_qgroup',keys.qgroup);
             $cookies.put('exam_branch',keys.UNIT_ID);
+            $scope.apptitle = $filter('filter')($scope.mod_list, {MOD_ID: $scope.apptitle})[0].MOD_DESC;
+            $cookies.put('exam_title',$scope.apptitle);
+
 
             $log.log(keys.IS_ADMIN);
             if(keys.IS_ADMIN == 'N')
@@ -196,9 +214,8 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
         }
     }
 
-
-
-    $scope.landing_pg = function(ev) {
+    $scope.customFullscreen = true;
+    $scope.moduleSelection = function(ev) {
         $mdDialog.show({
             controller: DialogController,
             templateUrl: 'welcome/get_landing',
@@ -206,19 +223,22 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
             preserveScope: true,  // do not forget this if use parent scope
             parent: angular.element(document.body),
             targetEvent: ev,
-            clickOutsideToClose:true,
+            clickOutsideToClose:false,
             fullscreen: $scope.customFullscreen, // Only for -xs, -sm breakpoints.
             locals : { }
         })
             .then(function(answer2) {
                 $scope.status = 'You said the information was "' + answer2 + '".';
+
+                $scope.get_qgroups();
+
             }, function() {
                 $scope.status = 'You cancelled the dialog.';
             });
     };
 
     function DialogController($scope, $mdDialog ) {
-        $log.info("i am in ip number search ctrl");
+        $log.info("i am in module selection ");
 
         $scope.hide = function() {
             $mdDialog.hide();
@@ -231,23 +251,25 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
         };
 
 
-        $scope.login_redir = function(data) {
+        $scope.login_redir = function(modid, data) {
             $log.info("data: "+data);
             $mdDialog.hide();
 
+            $scope.apptitle = modid;
             if(data == 'Login'){
-               // $state.go('login');
+                $scope.newaction = 'Signup';
                 $scope.submit_label = 'Login';
+
+
+
             }else if(data == 'Signup'){
                 //$state.go('register');
                 $scope.submit_label = 'Signup';
                 $scope.newaction = 'Login';
             }
         }
-
-
     }
-    $scope.landing_pg();
+    $scope.moduleSelection();
 
 
 

@@ -11,7 +11,7 @@
     <nav class="navbar navbar-transparent navbar-absolute md-whiteframe-2dp">
         <div class="container-fluid">
             <div class="navbar-header" hide-xs>
-                <img src="<?php echo base_url(); ?>assets/images/fav.png" style="padding-right:14px"><span style="font-size:1.3em;text-shadow: 2px 2px 2px #060a0f;">NURSE PRACTITIONER PROGRAM</span>
+                <img src="<?php echo base_url(); ?>assets/images/fav.png" style="padding-right:14px"><span style="font-size:1.3em;text-shadow: 2px 2px 2px #060a0f;">{{apptitle}}</span>
                 <div style="margin: -10px 44px;font-size: 12px;color: #cccbcb;    text-shadow: 1px 1px 1px #060a0f;">( Speciality Courses )</div>
             </div>
 

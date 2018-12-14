@@ -4,7 +4,7 @@
 <html lang="en" >
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NURSE PRACTITIONER PROGRAM</title>
+    <title>EXAMIZE NURSES</title>
     <link rel="icon" href="<?php echo base_url(); ?>assets/images/fav.png">
 
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/angular-material.min.css"> <!-- 1.1.0 --->

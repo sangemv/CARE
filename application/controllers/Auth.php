@@ -57,18 +57,77 @@ class Auth extends CI_Controller
     {
         $data = array();
         $user_id = $input->userid;
+        $modid = $input->modid;
+        $action_on = $input->action_on;
 
-        $res = $this->basemodel->num_of_res($this->users->tbl_name, array($this->users->USER_ID => $user_id));
-        if($res == 0)
-        {
-            $data['response'] = SUCCESSDATA;
-            $data['status'] = "Valid UserId";
+        // Verify module 3 then check it in mysql, if module 1,2 check in oracle
+
+        if($modid == 3) {
+            $res = $this->basemodel->num_of_res($this->users->tbl_name, array($this->users->USER_ID => $user_id));
+
+            if($action_on == 'Login') {
+                // Step 1: User ID exits or not based on module
+                if ($res > 0) {
+                    // Step 2: User Attend for exam or not
+                    $res = $this->basemodel->num_of_res($this->users->tbl_name, array($this->users->USER_ID => $user_id, $this->users->EXAM_STATUS => 'N'));
+                    if($res > 0) {
+                        $data['response'] = SUCCESSDATA;
+                        $data['status'] = "Valid UserId";
+                    }
+                    else{
+                        $data['response'] = FAILEDDATA;
+                        $data['status'] = "This User Already Atttend For Exam";
+                    }
+
+                } else {
+                    $data['response'] = FAILEDDATA;
+                    $data['status'] = "Invalid UserId";
+                }
+            }
+            else if($action_on == 'Signup')
+            {
+                // Step 1: User ID exits or not based on module
+                if ($res > 0) {
+                    $data['response'] = FAILEDDATA;
+                    $data['status'] = "UserId Already Exists";
+                } else {
+                    $data['response'] = SUCCESSDATA;
+                    $data['status'] = "Valid UserId";
+                }
+            }
+
         }
         else
         {
-            $data['response'] = FAILEDDATA;
-            $data['status'] = "UserId Already Exits";
+            // here we need to check employee was exists or not
+            $corconc = odbc_connect("CORPDB","HIDDB","HIDDB");
+            $xx_query = "SELECT count(*) CNT FROM EMPLOYEES WHERE STATUS= 'A' AND EMP_CODE = '$user_id'";
+            $eresult = odbc_exec($corconc,$xx_query);
+            $res = odbc_result($eresult,'CNT');
+
+            // Step 1: User ID exits or not based on module
+            if($res > 0) {
+                $data['response'] = SUCCESSDATA;
+                $data['status'] = "Valid UserId";
+
+                // Step 2: User Attend for exam or not
+                $res = $this->basemodel->num_of_res($this->users->tbl_name, array($this->users->USER_ID => $user_id, $this->users->EXAM_STATUS => 'N'));
+                if($res > 0) {
+                    $data['response'] = SUCCESSDATA;
+                    $data['status'] = "Valid UserId";
+                }
+                else{
+                    $data['response'] = FAILEDDATA;
+                    $data['status'] = "This User Already Atttend For Exam";
+                }
+            }
+            else
+            {
+                $data['response'] = FAILEDDATA;
+                $data['status'] = "Invalid UserId";
+            }
         }
+        // Step 3: Return the response
         return $data;
     }
 

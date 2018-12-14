@@ -22,10 +22,6 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->view('login');
 	}
-    public function register()
-    {
-        $this->load->view('login_with_regist');
-    }
 	public function home()
     {
         $this->load->view('home');

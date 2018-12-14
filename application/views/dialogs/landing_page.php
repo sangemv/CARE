@@ -12,19 +12,42 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <form ng-cloak class="card" >
         <md-toolbar style="background:none;">
             <div class="card-header card-header-icon" data-background-color="orange" style="margin-top:0px;line-height: 32px;font-size: 16px;
-        padding: 5px 10px;">Click Relevant Button </div>
+        padding: 5px 10px;">Please Select Module </div>
         </md-toolbar>
 
-
         <md-dialog-content>
-            <div class="md-dialog-content row" style="padding:10px;margin-top: 60px;">
-                <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-                    <a class="btn btn-primary btn-round btn-lg" ng-click="login_redir('Login');">Nurse Exam Programme<br>(Signin)</a>
-                    <a class="btn btn-success btn-round btn-lg" ng-click="login_redir('Login');">Nurse Prectitioner Programme<br>(Signin)</a>
-                   <a class="btn btn-info btn-round btn-lg" ng-click="login_redir('Signup');" style="margin-top:10px;">Nurse Recruiuitment Programme<br>(Signup)</a>
-                </section>
+            <div class="md-dialog-content " >
+
+                <div class="card col s4 m4 l4 ">
+                    <div class="card-content row">
+                        <label>Special Cadre Nurse</label>
+                        <md-button class="btn btn-round btn-primary right" ng-click="login_redir(1,'Login');" >Click Here..</md-button>
+                    </div>
+                </div>
+
+                <div class="card col s4 m4 l4 ">
+                    <div class="card-content row">
+                        <label>Nurse Practitioner Programme</label>
+                        <md-button class="btn btn-round btn-primary right" ng-click="login_redir(2,'Login');" >Click Here..</md-button>
+                    </div>
+                </div>
+
+                <div class="card col s4 m4 l4 ">
+                    <div class="card-content row">
+                        <label>Nurse Recruitment Programme</label>
+                        <md-button class="btn btn-round btn-primary right" ng-click="login_redir(3,'Signup');" >Signup</md-button>
+                        <md-button class="btn btn-round btn-primary right" ng-click="login_redir(3,'Login');" >Signin</md-button>
+                    </div>
+                </div>
+
             </div>
         </md-dialog-content>
     </form>
+
+
+
+
+
+
 </md-dialog>
 
