@@ -1,7 +1,7 @@
 RewriteEngine On
-RewriteBase /nursing_exam
+RewriteBase /caretreatwell
 RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond $1 !^(index\.php|images|robots\.txt|css|docs|js|system)
-RewriteRule ^(.*)$ /nursing_exam/index.php?/$1 [L]
+RewriteRule ^(.*)$ /caretreatwell/index.php?/$1 [L]

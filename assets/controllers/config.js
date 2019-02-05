@@ -1,6 +1,6 @@
 'use strict';
 
-app.config(['$stateProvider','$urlRouterProvider', function($stateProvider,$urlRouterProvider){
+app.config(function($stateProvider,$urlRouterProvider){
     $urlRouterProvider.otherwise('/login');
 
     $stateProvider
@@ -10,50 +10,52 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider,$urlR
                 '': {templateUrl: 'welcome/index',controller: 'loginCtrl'}
             }
         })
+		.state('home', {
+			url: '/home',
+			views: {
+				'' : {templateUrl: 'welcome/home',controller: 'mainCtrl'},
+				'header@home': {templateUrl: 'welcome/header'},
+                'sidebar@home': {templateUrl: 'welcome/side_bar'},
+				'main_content@home': {templateUrl: 'welcome/main_content',controller: 'regCtrl'},
+				'footer@home': {templateUrl: 'welcome/footer'}
+			}
+		})		
+		.state('tasklist', {
+			parent: 'home',
+			url: '/tasklist',
+			views: {			
+				'main_content@home': {templateUrl: 'welcome/tasklist'}
+			}
+		})		
+		.state('users', {
+			parent: 'home',
+			url: '/users',
+			views: {			
+				'main_content@home': {templateUrl: 'welcome/users',controller: 'setupCtrl'}
+			}
+		})				
+		.state('changepswd', {
+			parent: 'home',
+			url: '/changepswd',
+			views: {			
+				'main_content@home': {templateUrl: 'welcome/changepswd'}
+			}
+		})
 
-        .state('home', {
-            url: '/exam',
-            views: {
-                '': {templateUrl: 'welcome/home',controller: 'mainCtrl'},
-                'header@home': {templateUrl: 'welcome/header'},
-                'sidebar@home': {templateUrl: 'welcome/sidebar'},
-                'main-content@home': {templateUrl: 'welcome/content',controller:'regCtrl'},
-                'footer@home': {templateUrl: 'welcome/footer'}
-            }
-        })
+		.state('location', {
+			parent: 'home',
+			url: '/location',
+			views: {
+				'main_content@home': {templateUrl: 'welcome/location',controller: 'setupCtrl'}
+			}
+		})
+		.state('createtask', {
+			parent: 'home',
+			url: '/createtask',
+			views: {
+				'main_content@home': {templateUrl: 'welcome/createtask', controller: 'setupCtrl'}
+			}
+		})
 
-        .state('results', {
-            url: '/results',
-            views: {
-                '': {templateUrl: 'welcome/home',controller: 'reportCtrl', abstract:true},
-                'header@results': {templateUrl: 'welcome/header'},
-                'sidebar@results': {templateUrl: 'welcome/sidebar'},
-                'main-content@results': {templateUrl: 'welcome/reports',controller : 'adminCtrl'},
-                'footer@results': {templateUrl: 'welcome/footer'}
-            }
-        })
+});
 
-        .state('qgroups', {
-            parent: 'results',
-            url: '/qgroups',
-            views: {
-                'main-content@results': {templateUrl: 'welcome/qgroups', controller : 'adminCtrl'}
-            }
-        })
-        .state('qlists', {
-            parent: 'results',
-            url: '/qlists',
-            views: {
-                'main-content@results': {templateUrl: 'welcome/qlists', controller : 'adminCtrl'}
-            }
-        })
-		.state('dashboard', {
-            parent: 'results',
-            url: '/dashboard',
-            views: {
-                'main-content@results': {templateUrl: 'welcome/dashboard',controller:'adminCtrl'}
-            }
-        })
-
-
-}]);

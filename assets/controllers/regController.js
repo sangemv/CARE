@@ -1,233 +1,91 @@
 /**
- * Created by uday on 16/03/2018.
+ * Created by Venkat on 04/02/2019.
  */
-app.controller('regCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope', '$q', '$log','$window','baseFactory','$cookies','$filter','$mdDialog',
-    function ($scope, $state, $timeout, $http, $rootScope, $q, $log,$window,baseFactory,$cookies,$filter,$mdDialog )
+app.controller('regCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope','$log','$window','baseFactory','$cookies','$filter', function ($scope, $state, $timeout, $http, $rootScope, $log,$window,baseFactory,$cookies,$filter)
 {
 
-    $scope.user_id = $cookies.get('exam_user_id');
-    $scope.user_name = $cookies.get('exam_user_name');
-    $scope.user_role = $cookies.get('exam_role');
-    $scope.group_name = $cookies.get('exam_group_name');
-    $scope.exam_branch = $cookies.get('exam_branch');
+    $log.log("iam in home controller");
+    $scope.check_sessions();
 
-    $scope.exam_stat = '';
+    $scope.add_edit = 'Add';
 
-    //timer with timeout
-    $scope.stop_watch = 1800; // Total exam time 30 min
-    $scope.start_exam = function() {
-        $scope.prevdat = new Date();
-        if($cookies.get('exam_time') != '' )
-        {
-            $scope.stop_watch = $cookies.get('exam_time');
-        }
-        else
-            $scope.stop_watch = 1800; // Total exam time 30 min
- 
-
-        $scope.exam_stat = 'S';
-        $log.log("start the exam "+$scope.exam_stat);
-        if($scope.myTimeout){
-            $timeout.cancel($scope.myTimeout);
-        }
-        $scope.onTimeout = function(){
-            $scope.stop_watch--;
-
-            $cookies.put('exam_time', $scope.stop_watch);
-
-            if($scope.exam_stat != 'C')
-            {
-                if($scope.stop_watch == 0 )
-                    $scope.stop_exam();
-                else
-                    $scope.myTimeout = $timeout($scope.onTimeout,1000);
-            }
-        }
-        $scope.myTimeout = $timeout($scope.onTimeout,1000);
-    };
-
-    $scope.resetTimerWithTimeout = function(){
-        $scope.stop_watch = 0;
-        $timeout.cancel($scope.myTimeout);
-    }
-
-    if($state.is('home'))
-        $scope.exam_questions();
-
-
-    if($cookies.get('exam_time') != '' )
+    $scope.auth = {location:'',task:'',comments:'',assignto:'',assgndept:'',reportby:''};
+    $scope.addnewtask = function(data)
     {
-        $log.log("exam_time "+$cookies.get('exam_time'));
-        $scope.start_exam();
-    }
+        //$log.log("add function called "+JSON.stringify(adduser));
+     /*   if(data.userid == '' || data.name == ''){
+            baseFactory.toastCtrl("error","Enter All Fields!");
+            return false;
+        }*/
 
-    if($scope.quest_list.length > 0 )
-        $scope.current_quest = $scope.quest_list[0];
-
-    $scope.stop_exam = function()
-    {
-        $log.log("stop the exam");
-        $scope.exam_stat = 'P';
-        $scope.stay_exam();
-    }
+        //var send={auth:$scope.auth,action:"add_newtask_data"};
 
 
-    $scope.stay_exam = function()
-    {
-        $log.log("stay the exam");
 
-        $scope.submit_exam('N');
-
-        $scope.stop_watch = 120;
-        if($scope.myTimeout){
-            $timeout.cancel($scope.myTimeout);
-        }
-        $scope.onTimeout = function(){
-            $scope.stop_watch--;
-
-            $cookies.put('exam_time',$scope.stop_watch );
-            if($scope.exam_stat != 'C')
-            {
-                if($scope.stop_watch == 0 )
-                    $scope.close_exam();
-                else
-				{
-					if($scope.stop_watch == 300)
-						baseFactory.toastCtrl('warning',"You have 5mins left.");
-					
-                    $scope.myTimeout = $timeout($scope.onTimeout,1000);
-				}
-            }
-        }
-        $scope.myTimeout = $timeout($scope.onTimeout,1000);
-    }
-
-    $scope.results = {"currect_ans":0,"wrong_ans": 0,"marks": 0,"percent": 0};
-    $scope.submit_exam = function(stat)
-    {
-        $log.log("submited the exam "+$scope.exam_stat);
-        //$log.log(JSON.stringify($scope.exam_data));
-
-        var ans_list = new Array();
-        var indexdata = [];
-        var k = 0;
-        $scope.results.currect_ans = 0;
-        $scope.results.wrong_ans = 0;
-
-        for (var key in $scope.exam_data)
-        {
-            indexdata = $filter('filter')($scope.quest_list, {Q_ID: key})[0];
-            // $log.info(indexdata['ANS']+"  "+$scope.exam_data[key]);
-            if(indexdata['ANS'] == $scope.exam_data[key])
-                $scope.results.currect_ans++;
-            else
-                $scope.results.wrong_ans++
-
-            ans_list[k] = {
-                value:$scope.exam_data[key],
-                q_id: indexdata['Q_ID'],
-                type : indexdata['Q_TYPE']
-            };
-            k++;
-        }
-
-        $scope.results.percent = ($scope.results.currect_ans / $scope.quest_list.length) * 100;
-
-        var send = {"action":"save_exam",
-                    "exam_data":ans_list,
-                    "user_id":$scope.user_id,
-                    "currect_ans":$scope.results.currect_ans,
-                    "wrong_ans": $scope.results.wrong_ans,
-                    "marks": $scope.results.currect_ans,
-                    "percent": $scope.results.percent,
-                    "total_quest" : $scope.quest_list.length,
-                    "qgroup": $scope.qgroup,
-                    "exam_branch" : $scope.exam_branch
-                    };
-
-        //$log.log(send);
-        // return false;
-
-        baseFactory.examCtrl(send)
-            .then(function (payload) {
-                    $log.log(payload);
-                    if (payload.response == $rootScope.successdata) {
-                        if(stat == 'Y')
-                            $scope.close_exam();
-                        //$scope.current_question('25');
+        var send=$scope.auth;
+        send.action = "add_newtask_data";
+        $log.log("My add task function called "+JSON.stringify(send));
+        baseFactory.regCtrl(send)
+            .then(function(payload)
+                {
+                    //$log.log("users "+JSON.stringify(payload));
+                    if(payload.response == $rootScope.successdata)
+                    {
+                        if($scope.add_edit == "Edit")
+                            baseFactory.toastCtrl('success','Updated Successfully...!');
+                        else
+                            baseFactory.toastCtrl('success','Added Successfully...!');
+                        $scope.manage_user();
+                        $scope.adduser = {userid:'',name:'',mob:'',email:'',sts:'',adm_sts:''};
+                        //$("#collapse1").collapse('hide');
                     }
-                    else {
-                       baseFactory.toastCtrl('error',"Something Went Wrong");
+                    else if(payload.response == $rootScope.emptydata)
+                    {
+                        Materialize.toast('Something Went Wrong Here', 4000,'red');
                     }
                 },
-                function (errorPayload) {
+                function(errorPayload)
+                {
                     $log.error('failure loading', errorPayload);
                 });
-
-    }
-
-    $scope.close_exam = function()
-    {
-        $cookies.put('exam_time', '');
-        $scope.exam_stat = 'C';
-        $scope.exam_time = 0;
-
-        $timeout($scope.logout,60000);
     }
 
 
-
-
-    //$scope.prevdat = 0;
-    $scope.current_question = function(index)
+    $scope.tickets =[];
+    $scope.get_tickets = function(data)
     {
-        $scope.current_index = index;
-        $scope.current_quest = $scope.quest_list[index];
-        $scope.curdt = new Date();
-        var date2 = new Date();
-        //$log.info(date2+ " : current : "+$scope.curdt +" : time : "+$scope.prevdat);
-
-        var res = Math.round(Math.abs($scope.curdt - $scope.prevdat) / 1000);
-        var days = Math.floor(res / 86400);
-        var hours = Math.floor(res / 3600) % 24;
-        var minutes = Math.floor(res / 60) % 60;
-        var seconds = Math.round(res % 60);
-        //$log.info("dayDifference time "+res+ "  Days: "+days+"Hr: "+hours+"min: "+minutes+"sec: "+seconds);
-
-        var send = {
-                    "action":"get_current_qsttime",
-                    "user_id":$scope.user_id,
-                    "seconds":res,
-                    "questno":$scope.current_index,
-                    "qgroup": $scope.qgroup,
-                    "start_time" : $scope.prevdat,
-                    "end_time" : $scope.curdt
-                };
-
-        $scope.prevdat = $scope.curdt;
-
-        baseFactory.examCtrl(send)
-            .then(function (payload) {
-                    // $log.log(payload);
-                    if (payload.response == $rootScope.successdata){
-
+        var send={data:data,action:"get_tickets_data"};
+        //$log.log("alllocations "+JSON.stringify(send));
+        baseFactory.setupsCtrl(send)
+            .then(function(payload)
+                {
+                    //$log.log("locations "+JSON.stringify(payload));
+                    if(payload.response == $rootScope.successdata)
+                    {
+                        //$log.log("tickets "+JSON.stringify(payload.list));
+                        $scope.tickets = angular.fromJson(payload.list);
+                        //$log.log("tickets "+JSON.stringify($scope.tickets));
                     }
-                    else {
-
+                    else if(payload.response == $rootScope.emptydata)
+                    {
+                        $scope.tickets = [];
                     }
                 },
-                function (errorPayload) {
-                    baseFactory.toastCtrl('error',"Something Went Wrong");
+                function(errorPayload)
+                {
                     $log.error('failure loading', errorPayload);
                 });
-
-
-
-
     }
 
+
+
+  /*  $scope.tasks = false;
+    $scope.open_field = function(){
+        $scope.tasks = true;
+    }*/
 
 
 
 
 }]);
+

@@ -1,5 +1,5 @@
 /**
- * Created by uday on 08/02/2018.
+ * Created by venkat on 20/01/2019.
  */
 app.factory('baseFactory', function($http,$log,$q,$mdToast,$cookies) {
     return {
@@ -21,7 +21,25 @@ app.factory('baseFactory', function($http,$log,$q,$mdToast,$cookies) {
                 });
             return deferred.promise;
         },
-        examCtrl: function(input_data)
+        uploadCtrl: function(input_data)
+        {
+            var deferred = $q.defer();
+            $http.post('registry',input_data,
+                {
+                    headers: {'Accept': 'application/json','Content-Type': 'application/json'}
+                })
+                .success(function(data)
+                {
+                    deferred.resolve(data)
+                })
+                .error(function(msg, code)
+                {
+                    deferred.reject(msg);
+                    $log.error(msg, code);
+                });
+            return deferred.promise;
+        },
+		regCtrl: function(input_data)
         {
             var deferred = $q.defer();
             $http.post('registry',input_data,
@@ -61,6 +79,25 @@ app.factory('baseFactory', function($http,$log,$q,$mdToast,$cookies) {
         {
             var deferred = $q.defer();
             $http.post('setups',input_data,
+                {
+                    headers: {'Accept': 'application/json','Content-Type': 'application/json'}
+                })
+                .success(function(data)
+                {
+                    deferred.resolve(data)
+                })
+                .error(function(msg, code)
+                {
+                    deferred.reject(msg);
+                    $log.error(msg, code);
+                });
+            return deferred.promise;
+        },
+
+        creditsCtrl: function(input_data)
+        {
+            var deferred = $q.defer();
+            $http.post('credits',input_data,
                 {
                     headers: {'Accept': 'application/json','Content-Type': 'application/json'}
                 })

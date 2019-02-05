@@ -21,68 +21,47 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		$this->load->view('login');
-	}
+	}	
 	public function home()
-    {
-        $this->load->view('home');
-    }
-
+	{
+		$this->load->view('home');		
+	}
 	public function header()
-    {
-        $this->load->view('basic/header');
-    }
-
-	public function sidebar()
-    {
-        $this->load->view('basic/sidebar');
-    }
-
+	{
+		$this->load->view('basic/header');		
+	}
 	public function footer()
-    {
-        $this->load->view('basic/footer');
-    }
-
-	public function content()
-    {
-        $this->load->view('question_paper');
-    }
-
-	public function reports()
-    {
-        $this->load->view('member_list');
-    }
-
-	public function dashboard()
-    {
-        $this->load->view('dashboard');
-    }
-
-    public function check()
-    {
-        $this->load->view('welcome_message');
-    }
-
-    public function qgroups()
-    {
-        $this->load->view('qgroups');
-    }
-
-    public function qlists()
-    {
-        $this->load->view('qlists');
-    }
-
-    public function addquestion()
-    {
-        $this->load->view('dialogs/addquestion');
-    }
-    public function upload_exl_questions()
-    {
-        $this->load->view('dialogs/upload_exl_questions');
-    }
-    public function get_landing()
-    {
-        $this->load->view('dialogs/landing_page');
-    }
+	{
+		$this->load->view('basic/footer');
+	}
+	public function side_bar()
+	{
+		$this->load->view('basic/side_bar');
+	}
+	public function main_content()
+	{
+		$this->load->view('main_content');
+	}
+	public function tasklist()
+	{
+		$this->load->view('tasklist');
+	}
+	public function location()
+	{
+		$this->load->view('setup/locations');
+	}
+	public function users()
+	{
+		$this->load->view('setup/users');
+	}
+	public function changepswd()
+	{
+		$this->load->view('setup/changepswd');
+	}
+	public function createtask()
+	{
+		$this->load->view('setup/createtask');
+	}
+		
 
 }

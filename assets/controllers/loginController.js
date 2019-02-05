@@ -1,20 +1,17 @@
 /**
- * Created by uday on 08/02/2018.
+ * Created by venkat on 01/04/2019.
  */
-app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope', '$q','$log','$window','baseFactory','$cookies','$filter','$mdDialog', function ($scope, $state, $timeout, $http, $rootScope, $q, $log,$window,baseFactory,$cookies,$filter,$mdDialog)
+app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope','$log','$window','baseFactory','$cookies','$filter', function ($scope, $state, $timeout, $http, $rootScope, $log,$window,baseFactory,$cookies,$filter)
 {
-    $rootScope.isLoading = true;
     $rootScope.successdata = "success";
     $rootScope.emptydata   = "empty";
     $rootScope.faileddata  = "failed";
-    $scope.newaction       = 'Signup';
-    $scope.submit_label    = 'Login';
+    $scope.submit_label    = "Login";
 
-    $log.log("i'm in login Controller ");
-    $log.log("user_id "+$cookies.get('exam_user_id'));
+    $log.log("i'm in login Controller : "+$scope.submit_label);
 
-    $scope.apptitle = "Examize Nurses";
-    if ($cookies.get('exam_user_id') == undefined || $cookies.get('exam_user_id') == "" || $cookies.get('exam_user_id') == null)
+
+   if ($cookies.get('twt_eid') == undefined || $cookies.get('twt_eid') == "" || $cookies.get('twt_eid') == null)
     {
         if (!$state.is("login"))
         {
@@ -25,7 +22,7 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
         var send = {action: "check_session_exists"};
         baseFactory.UserCtrl(send)
             .then(function (payload) {
-                    //$log.log(payload);
+                    $log.log(payload);
                     if (payload.response == $rootScope.faileddata) {
                         baseFactory.toastCtrl('error','Session Expired, Logging Out!...')
                         $timeout(function () {
@@ -51,87 +48,26 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
         baseFactory.toastCtrl('success','Logout Success, Login Again!');
     };
 
-    $scope.qgroup_list = [];
-    $scope.get_qgroups = function()
-    {
-        var send = {"action":"fetch_qgroup_data","modid":$scope.apptitle};
-        baseFactory.setupsCtrl(send)
-            .then(function (payload) {
-                    //$log.log(payload);
-                    if (payload.response == $rootScope.successdata) {
-                        $scope.qgroup_list = payload.list;
-                    }
-                    else {
-                        $scope.qgroup_list = [];
-                    }
-                },
-                function (errorPayload) {
-                    $log.error('failure loading', errorPayload);
-                });
-    }
-    // $scope.get_qgroups();
 
-    $scope.mod_list = [];
-    $scope.get_modules = function()
-    {
-        var send = {"action":"fetch_mod_data"};
-        baseFactory.setupsCtrl(send)
-            .then(function (payload) {
-                    //$log.log(payload);
-                    if (payload.response == $rootScope.successdata) {
-                        $scope.mod_list = payload.list;
-                    }
-                    else {
-                        $scope.mod_list = [];
-                    }
-                },
-                function (errorPayload) {
-                    $log.error('failure loading', errorPayload);
-                });
-    }
-    $scope.get_modules();
+    $scope.auth = {user_id:'',pswd:''};
 
-    $scope.changeaction = function()
-    {
-        $log.log("in changeaction : "+$scope.newaction);
-        if($scope.newaction == 'Signup')
-        {
-            $scope.submit_label = 'Signup';
-            $scope.newaction = 'Login';
-        }
-        else
-        {
-            $scope.submit_label = 'Login';
-            $scope.newaction = 'Signup';
-        }
-    }
 
-    $scope.auth = {uname: '', gender: '', qualify: '', exp : '',email : '', user_id:'',pswd:'',qgroup:''};
     $scope.logincheck = function()
     {
-        $log.log("para "+$scope.submit_label+" \n new actions "+$scope.newaction);
+        baseFactory.toastCtrl('success',"login Submitted");
+        $scope.submit_label = "Loading...";
 
-        var send = $scope.auth;
-        send.action = $scope.submit_label;
-        $log.log("action "+send.action);
+        var send={user_id:$scope.auth.user_id,pswd:$scope.auth.pswd,action:"login_user_check"};
         //$log.log(JSON.stringify(send));
-
         baseFactory.UserCtrl(send)
             .then(function(payload)
                 {
                     $log.log(payload);
-                    if(payload.response==$rootScope.successdata)
-                    {
-                        if($scope.submit_label == 'Login')
-                        {
-                            var group_name = $filter('filter')($scope.qgroup_list, {GROUP_ID: $scope.auth.qgroup})[0].GROUP_NAME;
-                            $scope.login_app(payload.list,'set',group_name);
-                        }
-                        else if($scope.submit_label == 'Signup')
-                        {
-                            $scope.submit_label = 'Login';
-                            baseFactory.toastCtrl('success','Registration Successfull, Please Login With Registered MailID ');
-                        }
+                    if(payload.response == $rootScope.successdata)
+                    {		
+                        $log.log("Afer login "+JSON.stringify(payload.list));
+                        baseFactory.toastCtrl('success',"login Success");
+                        $scope.login_app(payload.list);
                     }
                     else if(payload.response==$rootScope.emptydata)
                     {
@@ -141,135 +77,21 @@ app.controller('loginCtrl',['$scope', '$state', '$timeout', '$http', '$rootScope
                     {
                         baseFactory.toastCtrl('error',payload.status);
                     }
-
-                },
-                function(errorPayload)
-                {
-                    baseFactory.toastCtrl('error',"Something Went Wrong");
                     $scope.submit_label = "Login";
-
-                    $log.error('failure loading', errorPayload);
-                });
-
-    }
-
-    $scope.validate_user = function()
-    {
-        if($scope.submit_label == 'Signup')
-            var send = {userid: $scope.auth.email ,modid : $scope.apptitle, action_on : $scope.submit_label, action : 'validate_user'};
-        else if($scope.submit_label == 'Login')
-            var send = {userid: $scope.auth.user_id ,modid : $scope.apptitle,  action_on : $scope.submit_label,action : 'validate_user'};
-
-        $log.log(send);
-        baseFactory.UserCtrl(send)
-            .then(function(payload)
-                {
-                    $log.log(payload);
-                    if(payload.response==$rootScope.faileddata)
-                    {
-                        if($scope.submit_label == 'Signup'){
-                            $scope.auth.email = '';
-                            baseFactory.toastCtrl('error',payload.status);
-                            return false;
-                        }
-                        else if($scope.submit_label == 'Login'){
-                            $scope.auth.user_id = '';
-                            baseFactory.toastCtrl('error',payload.status);
-                            return false;
-                        }
-                        else
-                            return true;
-                    }
                 },
                 function(errorPayload)
                 {
-                    baseFactory.toastCtrl('error',"Something Went Wrong");
                     $log.error('failure loading', errorPayload);
                 });
     }
 
-    $scope.login_app = function(keys,type,group_name)
+    $scope.login_app = function(keys)
     {
-        if(type == 'set') {
-            $cookies.put('exam_user_name', keys.USER_NAME);
-            $cookies.put('exam_user_id', keys.USER_ID);
-            $cookies.put('exam_role', keys.IS_ADMIN);
-            $cookies.put('exam_group_name', group_name);
-            $cookies.put('exam_time','');
-            $cookies.put('exam_qgroup',keys.qgroup);
-            $cookies.put('exam_branch',keys.UNIT_ID);
-            $scope.apptitle = $filter('filter')($scope.mod_list, {MOD_ID: $scope.apptitle})[0].MOD_DESC;
-            $cookies.put('exam_title',$scope.apptitle);
+            $cookies.put('twt_ename', keys.usrdtls.EMP_NAME);
+            $cookies.put('twt_eid', keys.usrdtls.EMP_ID);
 
-
-            $log.log(keys.IS_ADMIN);
-            if(keys.IS_ADMIN == 'N')
-                $state.go('home');
-            else
-                $state.go('dashboard');
-        }
-        else
-        {
-
-        }
+            $state.go('home');
     }
-
-    $scope.customFullscreen = true;
-    $scope.moduleSelection = function(ev) {
-        $mdDialog.show({
-            controller: DialogController,
-            templateUrl: 'welcome/get_landing',
-            scope: $scope,        // use parent scope in template
-            preserveScope: true,  // do not forget this if use parent scope
-            parent: angular.element(document.body),
-            targetEvent: ev,
-            clickOutsideToClose:false,
-            fullscreen: $scope.customFullscreen, // Only for -xs, -sm breakpoints.
-            locals : { }
-        })
-            .then(function(answer2) {
-                $scope.status = 'You said the information was "' + answer2 + '".';
-
-                $scope.get_qgroups();
-
-            }, function() {
-                $scope.status = 'You cancelled the dialog.';
-            });
-    };
-
-    function DialogController($scope, $mdDialog ) {
-        $log.info("i am in module selection ");
-
-        $scope.hide = function() {
-            $mdDialog.hide();
-        };
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
-        $scope.answer = function(answer) {
-             $mdDialog.cancel();
-        };
-
-
-        $scope.login_redir = function(modid, data) {
-            $log.info("data: "+data);
-            $mdDialog.hide();
-
-            $scope.apptitle = modid;
-            if(data == 'Login'){
-                $scope.newaction = 'Signup';
-                $scope.submit_label = 'Login';
-
-
-
-            }else if(data == 'Signup'){
-                //$state.go('register');
-                $scope.submit_label = 'Signup';
-                $scope.newaction = 'Login';
-            }
-        }
-    }
-    $scope.moduleSelection();
 
 
 

@@ -2,8 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 /**
  * Created by PhpStorm.
- * User: uday
- * Date: 09/03/2018
+ * User: venkat
+ * Date: 31/01/2019
  * Time: 11:55
  */
 class OBasemodel extends CI_Model
@@ -12,9 +12,7 @@ class OBasemodel extends CI_Model
     public function __construct()
     {
         parent::__construct();
-
-        // $this->odbc = odbc_connect("BANJARA", "JEEVADB" , "CARE$2273$");
-        //$this->load->database();
+        $this->odbc = odbc_connect("CORPDB" , "HIDDB" , "HIDDB");
     }
 
     function fetch_records_from($qry)
@@ -37,7 +35,21 @@ class OBasemodel extends CI_Model
         }
     }
 
-
+    function execute_qry($qry='')
+    {
+        if($qry!='')
+        {
+            $res = odbc_exec($this->odbc , $qry );
+            if($res)
+                return true;
+            else
+                return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
 
 

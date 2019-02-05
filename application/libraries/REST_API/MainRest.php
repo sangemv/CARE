@@ -1,8 +1,8 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: uday
- * Date: 08/02/2018
+ * User: venkat
+ * Date: 08/01/2019
  * Time: 12:46
  */
 
@@ -14,7 +14,6 @@ if(!is_null($base_data))
 {
     $this->input->raw_input_stream = "";
     $headers = apache_request_headers();
-
     if(isset($_SERVER['HTTP_REFERER']) && isset($headers['Content-Type']))
     {
         $this->shref = $_SERVER['HTTP_REFERER'];
@@ -37,7 +36,6 @@ if(!is_null($base_data))
         $this->echs_content_type = $headers['Content-Type'];
         $this->echs_authorization = $headers['Authorization'];
         $ha_array = explode('=',$this->echs_authorization);
-
         $where = array("mytoken" => $ha_array[1],"tname" => $ha_array[0],"status" => ACTIVESTS);
         $true_auth = $this->baseauth->checkAuthorization($this->token->tbl_name,$where);
         if($this->echs_content_type==$this->baseauth->appjson && $true_auth==true)

@@ -2830,7 +2830,7 @@ th {
 .table>tfoot>tr>th,
 .table>thead>tr>td,
 .table>thead>tr>th {
-    padding: 0px 10px;
+    padding: 3px 10px;
     //line-height: 1.42857143;
     vertical-align: top;
     border-top: 1px solid #ddd
@@ -3163,21 +3163,21 @@ output {
 .form-control:focus {
     border-color: #66afe9;
     outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
+    //-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    //box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)
 }
 
 .form-control::-moz-placeholder {
-    color: #aaa;
+    color: #eee;
     opacity: 1
 }
 
 .form-control:-ms-input-placeholder {
-    color: #aaa
+    color: #eee
 }
 
 .form-control::-webkit-input-placeholder {
-    color: #aaa
+    color: #eee
 }
 
 .form-control[disabled],
@@ -4191,7 +4191,7 @@ fieldset[disabled] .btn-link {
 .btn-link:focus,
 .btn-link:hover {
     color: #23527c;
-    text-decoration: underline;
+    //text-decoration: underline;
     background-color: transparent
 }
 
@@ -4748,11 +4748,11 @@ textarea.input-group-sm>.input-group-btn>.btn {
 }
 
 .input-group-addon {
-    padding: 4px 15px 0px 0px;
+    padding: 0px 15px 32px 4px;
     font-size: 14px;
     font-weight: 400;
     line-height: 1;
-    color: #7d6bbd;
+    color: #9C27B0;
     text-align: center;
     background-color: #eee;
     border: 1px solid #ccc;
@@ -4851,14 +4851,13 @@ textarea.input-group-sm>.input-group-btn>.btn {
 .nav>li>a {
     position: relative;
     display: block;
-    padding: 7px 15px
+    padding: 10px 15px
 }
 
 .nav>li>a:focus,
 .nav>li>a:hover {
     text-decoration: none;
-    //background-color: #eee;
-	 color: #3C4858;
+    //background-color: #eee
 }
 
 .nav>li.disabled>a {
@@ -5222,7 +5221,7 @@ textarea.input-group-sm>.input-group-btn>.btn {
 .navbar-toggle {
     position: relative;
     float: right;
-    padding: 15px 5px;
+    padding: 9px 10px;
     margin-top: 3px;
     margin-right: 0px;
     margin-bottom: 3px;
@@ -5942,15 +5941,15 @@ a.label:hover {
 .badge {
     display: inline-block;
     min-width: 10px;
-    padding: 3px 7px;
+    padding: 4px 7px;
     font-size: 12px;
-    font-weight: 700;
+    //font-weight: 700;
     line-height: 1;
     color: #fff;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
-    background-color: #777;
+    background-color: #795548;
     border-radius: 10px
 }
 
@@ -6211,9 +6210,9 @@ a.thumbnail:hover {
     line-height: 20px;
     color: #fff;
     text-align: center;
-    //background-color: #337ab7;
-    //-webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
-    //box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+    background-color: #337ab7;
+    -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .15);
     -webkit-transition: width .6s ease;
     -o-transition: width .6s ease;
     transition: width .6s ease

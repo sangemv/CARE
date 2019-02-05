@@ -13,14 +13,5 @@ class Main extends CI_Controller
         $this->load->view('main');
     }
 
-    public function get_patipno()
-    {
-        $this->load->view('dialogs/get_pat_ipno');
-    }
-    public function get_zcodename()
-    {
-        $this->load->view('dialogs/get_zcodename');
-    }
-
 
 }
